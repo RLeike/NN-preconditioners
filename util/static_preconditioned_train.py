@@ -31,22 +31,15 @@ def infer_gradient_magnitude(shape, verbose=False):
     std = infer_prior(shape)
     if verbose:
         print(shape)
-    if len(shape) == 4:
+    if len(shape) > 1:
         if verbose:
-            print("Assuming this is a convolutional layer")
-        size = np.prod(shape[0:2]) # this is slightly wrong for padding=same
+            print("assuming all but last dimension is input")
+        size = np.prod(shape[0:-1]) # this is slightly wrong for padding=same
         return np.sqrt(size)*std
-    elif len(shape) == 2:
-        if verbose:
-            print("Assuming this is a fully connected layer")
-        size = shape[0]
-        return np.sqrt(size)*std
-    elif len(shape) == 1:
+    else len(shape) == 1:
         if verbose:
             print("assuming this is a bias")
         return 1. # biases don't modify the gradient
-    else:
-        raise NotImplementedError("could not infer layer type")
 
 
 def spq_initialize(net):
