@@ -43,7 +43,7 @@ class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         # Input: 28x28x1
-        self.conv1 = nn.Conv2d(1, 6, 3)
+        self.conv1 = nn.Conv2d(3, 6, 3)
         # Output: 26x26x1
         # Maxpool 2x2
         # Input: 13x13x6
