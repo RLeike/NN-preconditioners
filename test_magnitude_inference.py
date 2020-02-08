@@ -26,7 +26,7 @@ def test_spq_initialization(seed, shape):
     paras = net.parameters()
     util.spq_initialize(net)
     result = paras[0].matmul(torch.randn(shape[1:]+(10,))) + paras[1].view((-1,1))
-    result = result/np.sqrt(2) # hack that reduces variance by the same amount as relu
+    result = result*np.sqrt(.34) # hack that reduces variance by the same amount as relu
     test_vec = np.array(result**2).sum(axis=1)
     from scipy.stats import chi2
     # need to test for significant deviation
@@ -48,7 +48,7 @@ def test_spq_gradient(seed, shape):
     util.spq_initialize(net)
     paras = net.parameters()
     result = relu(torch.randn((10,) + shape[:1])).matmul(paras[0])
-    result = result/np.sqrt(2) # hack that reduces variance by the same amount as relu
+    result = result*np.sqrt(.34) # hack that reduces variance by the same amount as relu
     std = util.infer_gradient_magnitude(shape)
     print(std)
     test_vec = np.array(result**2).sum(axis=0)/std

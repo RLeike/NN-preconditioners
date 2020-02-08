@@ -16,10 +16,10 @@ def infer_prior(shape, verbose=False, relu=None):
     if len(shape) > 1:
         if verbose:
             print("assuming all but first dimension is input")
-        size = 1/np.prod(shape[1:])*.96 # letting 4% for bias
+        result = np.sqrt(1/np.prod(shape[1:])*.96) # letting 4% for bias
         if relu:
-            size /= 2 # account for relu
-        return np.sqrt(size)
+            result /= np.sqrt(.34) # account for relu
+        return result
     elif len(shape) == 1:
         if verbose:
             print("assuming this is a bias")
@@ -39,9 +39,10 @@ def infer_gradient_magnitude(shape, verbose=False, relu=None):
         if verbose:
             print("assuming all but last dimension is input")
         size = np.prod(shape[0:-1]) # this is slightly wrong for padding=same
+        result = np.sqrt(size)*std
         if relu:
-            size /= 2 # account for relu
-        return np.sqrt(size)*std
+            result *= np.sqrt(.34) # account for relu
+        return result
     else:
         if verbose:
             print("assuming this is a bias")
@@ -53,7 +54,7 @@ def spq_initialize(net):
     prior = []
     for para in net.parameters():
         prior += [infer_prior(para.shape, verbose=False)]
-        para.data = (torch.randn(*para.shape)*prior[-1]*2).data
+        para.data = (torch.randn(*para.shape)*prior[-1]).data
         
 
 def spq_train(net, trainloader, validationloader):
