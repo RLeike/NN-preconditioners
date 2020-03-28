@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def default_initialize(net):
-    pass
+    pass # a bit dirty, does not actually intitialze
 
 
 def default_train(net, trainloader, validationloader):
