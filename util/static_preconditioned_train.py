@@ -49,7 +49,7 @@ def infer_gradient_magnitude(shape, verbose=False, relu=None):
         return 1. # biases don't modify the gradient
 
 
-def spq_initialize(net):
+def spc_initialize(net):
     global prior
     prior = []
     for para in net.parameters():
@@ -57,18 +57,20 @@ def spq_initialize(net):
         para.data = (torch.randn(*para.shape)*prior[-1]).data
         
 
-def spq_train(net, trainloader, validationloader):
+def spc_train(net, trainloader, validationloader, verbose=False):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
-    pq = []
+    prec = []
     for p in net.parameters():
-        pq += [1/infer_gradient_magnitude(p.shape)]
-    pq += [1.]
-    for i in range(len(pq)-2,-1,-1):
-        pq[i] *= pq[i+1]
-    pq = pq[1:]
-    print(pq)
+        prec += [1/infer_gradient_magnitude(p.shape)]
+    prec += [1.]
+    for i in range(len(prec)-2,-1,-1):
+        prec[i] *= prec[i+1]
+    prec = prec[1:]
+    if verbose:
+        print("preconditioner weights:", prec)
 
+    losses = []
     for epoch in range(4):  # loop over the dataset multiple times
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
@@ -84,15 +86,19 @@ def spq_train(net, trainloader, validationloader):
             loss = criterion(outputs, labels)
             loss.backward()
             for j,p in enumerate(net.parameters()):
-                p.grad.data.mul_(pq[j]*prior[j])
+                p.grad.data.mul_(prec[j]*prior[j])
             optimizer.step()
 
             # print
             running_loss += loss.item()
+            losses += [loss.item()]
             if i % 2000 == 1999:    # print every 2000 mini-batches
-                print('[%d, %5d] loss: %.3f' %
-                    (epoch + 1, i + 1, running_loss / 2000))
+                if verbose:
+                    print('[%d, %5d] loss: %.3f' %
+                        (epoch + 1, i + 1, running_loss/2000))
                 running_loss = 0.0
 
-    print('Finished Training')
+    if verbose:
+        print('Finished Training')
+    return losses
 
