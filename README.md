@@ -45,5 +45,7 @@ It computes a diagonal preconditioner that causes the gradient to be standard no
 
 ## Observations
 
-While the preconditioned gradient leeds to faster training initially, the training then slows and it gets overtaken by the standard procedure at about epoch 2.
+![Drag Racing](loss.png)
+While the preconditioned gradient leeds to faster training initially, the training then slows and it gets overtaken by the standard procedure at the end of epoch 1.
 This is possibly due to covariate shifts, all considerations that were made were assuming normal distributed weights of a fixed variance, but as the network trains this variance changes.
+Note that the learning rate for the preconditioned training was not tuned, and the overtaking happens later when one adjusts the learning rate.

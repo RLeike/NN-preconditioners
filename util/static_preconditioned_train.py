@@ -68,10 +68,11 @@ def spc_train(net, trainloader, validationloader, verbose=False):
         prec[i] *= prec[i+1]
     prec = prec[1:]
     if verbose:
+        print("prior standard deviations:", prior)
         print("preconditioner weights:", prec)
 
     losses = []
-    for epoch in range(4):  # loop over the dataset multiple times
+    for epoch in range(2):  # loop over the dataset multiple times
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
             # get the inputs; data is a list of [inputs, labels]
