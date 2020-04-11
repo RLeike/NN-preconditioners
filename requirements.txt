@@ -1,0 +1,8 @@
+
+python3 3.8
+pytorch
+scipy
+matplotlib
+pytest
+
+
