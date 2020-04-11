@@ -27,12 +27,12 @@ Run the tests with
 ## Background
 
 It is known that network initialization plays a crucial role in how good a network can be trained, especially for deep neural networks [1-3].
-Let us assume a normal distributed activation ${a}$ is the input to a ${M \times N}$ shaped fully connected layer with normal distributed weights of standard deviation ${sigma}$
-The output of the layer will be normal distributed with standard deviation ${sqrt{M}\sigma}$
-It was therefore recommended to initialize a network layer with ${sigma = \sqrt{M^{-1}}}$ e.g. with Normal samples of standard deviation ${sqrt{M^{-1}}}$
+Let us assume a normal distributed activation ${a}$ is the input to a ${M \times N}$ shaped fully connected layer with normal distributed weights of standard deviation ${\sigma}$
+The output of the layer will be normal distributed with standard deviation ${\sqrt{M}\sigma}$
+It was therefore recommended to initialize a network layer with ${\sigma = \sqrt{M^{-1}}}$ e.g. with Normal samples of standard deviation ${\sqrt{M^{-1}}}$
 This way standard normal distributed inputs to the layer lead to standard normal distributed outputs.
-However, the adjoint problem exists for the gradient; a normal distributed gradient that gets backpropagated will be modified by a factor ${sigma \sqrt{N}}$ as was noticed in [2].
-Therefore, many initialization, such as the pytorch default initialization for Linear layers [4] do not initialize the weights with a standard deviation of ${sigma = \sqrt{M^{-1}}}$ but choose a tradeoff between fixing the activations and fixing the gradient. 
+However, the adjoint problem exists for the gradient; a normal distributed gradient that gets backpropagated will be modified by a factor ${\sigma \sqrt{N}}$ as was noticed in [2].
+Therefore, many initialization, such as the pytorch default initialization for Linear layers [4] do not initialize the weights with a standard deviation of ${\sigma = \sqrt{M^{-1}}}$ but choose a tradeoff between fixing the activations and fixing the gradient. 
 The situation is further complicated by the presence of non-linearities, which modify the variance of activations and gradients.
 
 For deep networks these factors accumulate multiplicatively and cause the exploding/vanishing gradient problem.
