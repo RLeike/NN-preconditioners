@@ -7,7 +7,7 @@ import numpy as np
 def infer_prior(shape, verbose=False, relu=None):
     """
     calculates initialization that causes all activations to be normal
-    (almost like He initialization, but considering biases)
+    (almost like Xavier initialization, but considering biases)
     """
     if relu is None:
         relu = len(shape)==2
@@ -27,7 +27,7 @@ def infer_prior(shape, verbose=False, relu=None):
 
 def infer_gradient_magnitude(shape, verbose=False, relu=None):
     """
-    calculates which factor a independent normal gradient gets when
+    calculates which factor an independent normal gradient gets when
     being passed through a layer
     """
     if relu is None:
@@ -57,7 +57,7 @@ def spc_initialize(net):
         para.data = (torch.randn(*para.shape)*prior[-1]).data
         
 
-def spc_train(net, trainloader, validationloader, verbose=False):
+def spc_train(net, epochs, trainloader, validationloader, verbose=False):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
     prec = []

@@ -1,19 +1,23 @@
+# The code here mimics the behavior of the pytorch demo found at
+# https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html#sphx-glr-beginner-blitz-cifar10-tutorial-py
+
 import torch
 import torch.optim as optim
 import torch.nn as nn
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def default_initialize(net):
     pass # a bit dirty, does not actually intitialze
 
 
-def default_train(net, trainloader, validationloader, verbose=False):
+def default_train(net, epochs, trainloader, validationloader, verbose=False):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
     losses = []
-    for epoch in range(2):  # loop over the dataset multiple times
+    for epoch in range(epochs):  # loop over the dataset multiple times
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
             # get the inputs; data is a list of [inputs, labels]
