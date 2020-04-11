@@ -1,4 +1,4 @@
-import util
+import training
 
 import pytest
 import numpy as np
@@ -24,7 +24,7 @@ def test_spc_initialization(seed, shape):
     torch.manual_seed(seed)
     net = DummyNetwork(shape)
     paras = net.parameters()
-    util.spc_initialize(net)
+    training.spc_initialize(net)
     result = paras[0].matmul(torch.randn(shape[1:]+(10,))) + paras[1].view((-1,1))
     result = result*np.sqrt(.34) # hack that reduces variance by the same amount as relu
     test_vec = np.array(result**2).sum(axis=1)
@@ -45,11 +45,11 @@ def test_spc_gradient(seed, shape):
     np.random.seed(seed)
     torch.manual_seed(seed)
     net = DummyNetwork(shape)
-    util.spc_initialize(net)
+    training.spc_initialize(net)
     paras = net.parameters()
     result = relu(torch.randn((10,) + shape[:1])).matmul(paras[0])
     result = result*np.sqrt(.34) # hack that reduces variance by the same amount as relu
-    std = util.infer_gradient_magnitude(shape)
+    std = training.infer_gradient_magnitude(shape)
     print(std)
     test_vec = np.array(result**2).sum(axis=0)/std
     from scipy.stats import chi2
