@@ -22,7 +22,7 @@ This is a demonstration repository. Run the code with
 
 Run the tests with
 
-`pytest` (needs pytest).
+`pytest`
 
 ## Background
 
